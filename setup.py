@@ -1,14 +1,14 @@
 from distutils.core import setup
 
 setup(
-    name='django-auditlog',
-    version='0.4.5',
+    name='auditlog',
+    version='0.0.1',
     packages=['auditlog', 'auditlog.migrations', 'auditlog.management', 'auditlog.management.commands'],
     package_dir={'': 'src'},
-    url='https://github.com/jjkester/django-auditlog',
+    url='https://github.com/gmware/auditlog',
     license='MIT',
-    author='Jan-Jelle Kester',
-    description='Audit log app for Django',
+    author='Gmware',
+    description='Based on django-auditlog with additional features for auditing logs.',
     install_requires=[
         'django-jsonfield>=1.0.0',
         'python-dateutil==2.6.0'
