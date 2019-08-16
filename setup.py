@@ -1,13 +1,15 @@
 from distutils.core import setup
 import io
 
-
-with io.open('README.md', encoding="utf-8") as f:
-    long_description = f.read()
+try:
+    with io.open('README.md', encoding="utf-8") as f:
+        long_description = f.read()
+except IOError:
+    long_description = ''
 
 setup(
     name='auditlog',
-    version='0.0.4',
+    version='0.0.5',
     packages=['auditlog', 'auditlog.migrations', 'auditlog.management', 'auditlog.management.commands'],
     package_dir={'': 'src'},
     url='https://github.com/gmware/auditlog',
