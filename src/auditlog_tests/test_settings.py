@@ -3,6 +3,7 @@ Settings file for the Auditlog test suite.
 """
 import os
 import django
+from ci_isolation import database_names
 
 SECRET_KEY = 'test'
 
@@ -37,14 +38,16 @@ else:
 
 DATABASE_ROUTERS = ['auditlog_tests.router.PostgresRouter']
 
+_database_names = database_names()
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'auditlog_tests.db',
+        'NAME': _database_names['default'],
     },
     'postgres': {
         'ENGINE': POSTGRES_DRIVER,
-        'NAME': 'auditlog_tests_db',
+        'NAME': _database_names['postgres'],
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '127.0.0.1',

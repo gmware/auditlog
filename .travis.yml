@@ -3,47 +3,46 @@
 dist: trusty
 sudo: required
 language: python
-python: 3.6
+python: "3.6"
 group: deprecated-2017Q3
 services:
   - postgresql
+
+cache:
+  directories:
+    - .ci-replay-cache
 
 addons:
   postgresql: "9.4"
 
 env:
-  - TOX_ENV=py36-django-18
-  - TOX_ENV=py35-django-18
-  - TOX_ENV=py34-django-18
-  - TOX_ENV=py27-django-18
-  - TOX_ENV=py36-django-110
-  - TOX_ENV=py35-django-110
-  - TOX_ENV=py34-django-110
-  - TOX_ENV=py27-django-110
-  - TOX_ENV=py36-django-111
-  - TOX_ENV=py35-django-111
-  - TOX_ENV=py34-django-111
-  - TOX_ENV=py27-django-111
-  - TOX_ENV=py36-django-20
-  - TOX_ENV=py35-django-20
-  - TOX_ENV=py34-django-20
+  - ""
 
-matrix:
-  fast_finish: true
+stages:
+  - test
+  - deploy
+
+jobs:
+  include:
+    - stage: deploy
+      python: "3.6"
+      env: TOX_ENV=py36-django-20
+      install: skip
+      script: skip
+      after_success: skip
+      deploy:
+        provider: pypi
+        user: $PYPI_USER
+        password:
+          secure: $PYPI_PASSWORD
+        on:
+          repo: jjkester/django-auditlog
+          branch: stable
+          condition: $TOX_ENV = py36-django-20
 
 install: pip install -r requirements-test.txt
 
-script: tox -e $TOX_ENV
+script: timeout --foreground --signal=INT --kill-after=30s 40m python ci_tox_matrix.py
 
 after_success:
-  - codecov -e TOX_ENV
-
-deploy:
-  provider: pypi
-  user: $PYPI_USER
-  password:
-    secure: $PYPI_PASSWORD
-  on:
-    repo: jjkester/django-auditlog
-    branch: stable
-    condition: $TOX_ENV = py36-django-20
+  - codecov -f .coverage
